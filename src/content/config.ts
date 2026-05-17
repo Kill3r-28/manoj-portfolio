@@ -32,4 +32,12 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { blog, work, projects };
+const home = defineCollection({
+  type: "content",
+  schema: z.object({
+    greeting: z.string(),
+    location: z.string().optional(),
+  }),
+});
+
+export const collections = { blog, work, projects, home };

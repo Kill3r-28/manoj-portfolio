@@ -14,7 +14,8 @@ npm run dev
 | What | Where |
 |------|--------|
 | Name, email, socials | `src/consts.ts` |
-| Homepage copy | `src/pages/index.astro` |
+| Homepage intro (plain text) | `src/content/home/intro.md` |
+| Homepage layout (sections) | `src/pages/index.astro` |
 | Work history | `src/content/work/*.md` |
 | Projects | `src/content/projects/*/index.md` |
 | Essays (blog) | `src/content/blog/*/index.md` — set `draft: false` when ready |

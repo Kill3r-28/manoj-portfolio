@@ -4,5 +4,4 @@ role: "Project Manager · Program / Product Operations"
 dateStart: "01/01/2023"
 dateEnd: "present"
 ---
-
-Lead delivery for a high-scale product operation: roadmap with leadership, KPI and unit-economics design, hiring and coaching fresh graduates, and GenAI workflow automation across the pipeline.
+Overseeing end-to-end content operations, leading the team's adoption of GenAI technologies, and managing all aspects of the team lifecycle, including hiring, onboarding, and driving successful project delivery.

@@ -1,11 +1,17 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
 import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
+
+const intro = await getEntry("home", "intro");
+if (!intro) {
+  throw new Error("Missing src/content/home/intro.md");
+}
+const { Content: IntroContent } = await intro.render();
 
 const blog = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
@@ -44,28 +50,23 @@ const work = await Promise.all(
         class="w-20 h-20 rounded-full border border-black/10 dark:border-white/10 object-cover shrink-0"
       />
       <h4 class="animate font-semibold text-black dark:text-white">
-        Hi, I'm Manoj
+        {intro.data.greeting}
       </h4>
     </div>
     <div class="space-y-16">
       <section>
-        <article class="space-y-4">
-          <p class="animate">
-            Program Manager and Product Operations lead in Hyderabad — building
-            delivery systems, KPIs, and GenAI-assisted workflows at scale.
-          </p>
-          <p class="animate">
-            Background: systems engineering (Infosys), then program leadership
-            owning roadmap, hiring, and unit economics for a high-volume
-            product operation. This site tracks portfolio work toward senior PM /
-            AI product roles — shipped code, essays, and teardowns.
-          </p>
-          <p class="animate text-sm opacity-75">
-            Hyderabad, India ·
-            <Link href="/resume.pdf" aria-label="Download resume">
-              Resume (PDF)
-            </Link>
-          </p>
+        <article class="space-y-4 animate prose dark:prose-invert max-w-none prose-p:animate prose-p:my-0 prose-p:not-last:mb-4">
+          <IntroContent />
+          {
+            intro.data.location && (
+              <p class="text-sm opacity-75 !mt-4">
+                {intro.data.location} ·
+                <Link href="/resume.pdf" aria-label="Download resume">
+                  Resume (PDF)
+                </Link>
+              </p>
+            )
+          }
         </article>
       </section>
 
