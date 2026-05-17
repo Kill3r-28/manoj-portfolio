@@ -5,6 +5,6 @@ import tailwind from "@astrojs/tailwind";
 
 // Update `site` to your Netlify URL after first deploy (Site settings → Domain management).
 export default defineConfig({
-  site: "https://manoj-portfolio.netlify.app",
+  site: "https://manojkumardev.netlify.app",
   integrations: [mdx(), sitemap(), tailwind()],
 });

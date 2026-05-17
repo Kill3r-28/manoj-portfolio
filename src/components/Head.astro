@@ -26,6 +26,18 @@ const { title, description, image = "/nano.png" } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<script is:inline>
+  (function () {
+    const theme = localStorage.getItem("theme");
+    let dark;
+    if (theme === "light") dark = false;
+    else if (theme === "dark") dark = true;
+    else if (theme === "system")
+      dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    else dark = true;
+    if (dark) document.documentElement.classList.add("dark");
+  })();
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)">
 <link rel="icon" type="image/svg+xml" href="/favicon-light.svg" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/x-icon" href="/favicon-light.svg">
@@ -107,7 +119,7 @@ const { title, description, image = "/nano.png" } = Astro.props;
 
     window.matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", event => {
-        if (localStorage.theme === "system" || !localStorage.theme) {
+        if (localStorage.theme === "system") {
           toggleTheme(event.matches);
         }
       }
@@ -173,10 +185,14 @@ function toggleTheme(dark) {
   function preloadTheme() {
     const userTheme = localStorage.theme;
 
-    if (userTheme === "light" || userTheme === "dark") {
-      toggleTheme(userTheme === "dark");
-    } else {
+    if (userTheme === "light") {
+      toggleTheme(false);
+    } else if (userTheme === "dark") {
+      toggleTheme(true);
+    } else if (userTheme === "system") {
       toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    } else {
+      toggleTheme(true);
     }
   }
 
