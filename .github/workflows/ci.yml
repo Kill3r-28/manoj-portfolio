@@ -1,0 +1,28 @@
+# Quality gate: runs on every push/PR before Netlify deploys.
+# Deploy is handled by Netlify continuous deployment (Git webhook), not this workflow.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build

@@ -4,3 +4,14 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Production: every push to `main` → live site (after Netlify Git link is set up).
+[context.production]
+  branch = "main"
+
+# Pull requests → optional preview URL (enable in Netlify: Site configuration → Build & deploy → Deploy contexts).
+[context.deploy-preview]
+  command = "npm run build"
+
+[context.branch-deploy]
+  command = "npm run build"
