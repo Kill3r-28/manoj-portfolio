@@ -18,7 +18,8 @@ npm run dev
 | Homepage layout (sections) | `src/pages/index.astro` |
 | Work history | `src/content/work/*.md` |
 | Projects | `src/content/projects/*/index.md` |
-| Essays (blog) | `src/content/blog/*/index.md` — set `draft: false` when ready |
+| Essays (blog) | `src/content/blog/<slug>/index.md` — copy from `_template/`; see `src/content/blog/README.md` |
+| Blog upvotes & comments | Netlify Functions + Blobs (live on deploy; `npm run dev:netlify` locally) |
 | Photo | Replace `public/me.svg` or add `public/me.jpg` and update `index.astro` |
 | Resume | `public/resume.pdf` |
 | Site URL (sitemap) | `astro.config.mjs` → `site` after Netlify deploy |

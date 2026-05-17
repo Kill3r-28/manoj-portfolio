@@ -1,5 +1,5 @@
 ---
-greeting: "Hi, I'm Manoj"
+greeting: "Hi, I'm Manoj 👋🏻"
 location: "Hyderabad, India"
 ---
 An aspiring Product Manager.

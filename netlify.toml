@@ -5,6 +5,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Production: every push to `main` → live site (after Netlify Git link is set up).
 [context.production]
   branch = "main"
