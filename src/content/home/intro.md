@@ -1,10 +1,9 @@
 ---
 greeting: "Hi, I'm Manoj 👋🏻"
+
 location: "Hyderabad, India"
 ---
-An aspiring Product Manager.
 
-I'm currently up-skilling in building AI native applications and products.
+I lead program and product operations for a high-scale education product — roadmap, KPIs, hiring, and GenAI workflows across the pipeline.
 
-<u>Background</u>: Mechanical Engineer by education. Worked as a Systems Engineer at Infosys Limited for 2 years. 
-Currently working as a Project Manager at NxtWave Technologies.
+Currently upskilling in AI-native product building (agents, evals, shipped code).

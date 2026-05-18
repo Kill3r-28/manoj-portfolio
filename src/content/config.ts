@@ -8,6 +8,8 @@ const blog = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     originalUrl: z.string().url().optional(),
+    /** career = PM / AI ops notes; writing = personal essays from older sites */
+    category: z.enum(["career", "writing"]).default("writing"),
   }),
 });
 
@@ -37,6 +39,8 @@ const home = defineCollection({
   type: "content",
   schema: z.object({
     greeting: z.string(),
+    /** One line under your name — recruiters should grok role in ~5 seconds */
+    tagline: z.string().optional(),
     location: z.string().optional(),
   }),
 });

@@ -1,6 +1,6 @@
 ---
 title: "AI product teardown"
-description: "Structured analysis of a production AI product — coming W7–W8."
+description: "Structured analysis of a production AI product — updates will be posted soon."
 date: "May 17 2026"
 draft: false
 ---

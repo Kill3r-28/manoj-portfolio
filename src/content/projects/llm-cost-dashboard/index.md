@@ -1,6 +1,6 @@
 ---
 title: "LLM cost & throughput dashboard"
-description: "Modeling token cost, latency, and throughput — coming W10–W11."
+description: "Modeling token cost, latency, and throughput — updates will be posted soon."
 date: "May 17 2026"
 draft: false
 ---

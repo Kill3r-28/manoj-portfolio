@@ -1,6 +1,6 @@
 ---
 title: "Agentic content-quality reviewer"
-description: "Python, FastAPI, LLM evals, and a review UI — coming W2–W5."
+description: "Python, FastAPI, LLM evals, and a review UI — updates will be posted soon."
 date: "May 17 2026"
 draft: false
 ---

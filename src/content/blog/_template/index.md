@@ -3,6 +3,8 @@ title: "Your post title"
 description: "One-line summary for the blog list and SEO."
 date: "Jan 15 2024"
 draft: true
+category: writing
+# category: career   # use for PM / GenAI ops essays aimed at recruiters
 # originalUrl: "https://your-old-site.com/post"  # optional — link to source
 ---
 
