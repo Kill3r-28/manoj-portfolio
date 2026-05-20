@@ -1,5 +1,6 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
 import { getJson, setJson } from "./lib/store";
+import { isOwnerRequest } from "./lib/owner";
 
 export interface Comment {
   id: string;
@@ -68,6 +69,23 @@ export const handler: Handler = async (event: HandlerEvent) => {
     await setJson(commentKey(slug), comments);
 
     return json(201, { comment });
+  }
+
+  if (event.httpMethod === "DELETE") {
+    if (!isOwnerRequest(event)) {
+      return json(401, { error: "Unauthorized" });
+    }
+    const id = event.queryStringParameters?.id?.trim();
+    if (!id) {
+      return json(400, { error: "Missing id." });
+    }
+    const comments = (await getJson<Comment[]>(commentKey(slug))) ?? [];
+    const next = comments.filter((c) => c.id !== id);
+    if (next.length === comments.length) {
+      return json(404, { error: "Comment not found." });
+    }
+    await setJson(commentKey(slug), next);
+    return json(200, { ok: true });
   }
 
   return json(405, { error: "Method not allowed." });

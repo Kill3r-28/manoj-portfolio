@@ -1,9 +1,24 @@
-import { getStore } from "@netlify/blobs";
+import { getStore, type Store } from "@netlify/blobs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-const STORE_NAME = "blog-engagement";
+export const STORE_NAME = "blog-engagement";
 const LOCAL_DIR = join(process.cwd(), ".data", "blog-engagement");
+
+/** Named store; use explicit site + token when Netlify injects them (production). */
+export function getBlobStore(): Store {
+  const siteID = process.env.NETLIFY_SITE_ID;
+  const token = process.env.NETLIFY_BLOBS_TOKEN;
+  if (siteID && token) {
+    return getStore({
+      name: STORE_NAME,
+      siteID,
+      token,
+      consistency: "strong",
+    });
+  }
+  return getStore({ name: STORE_NAME, consistency: "strong" });
+}
 
 async function localPath(key: string) {
   const safe = key.replace(/[^a-zA-Z0-9:_-]/g, "_");
@@ -34,7 +49,7 @@ export async function getJson<T>(key: string): Promise<T | null> {
   }
 
   try {
-    const store = getStore({ name: STORE_NAME, consistency: "strong" });
+    const store = getBlobStore();
     return await store.get(key, { type: "json" });
   } catch {
     return readLocal<T>(key);
@@ -48,7 +63,7 @@ export async function setJson<T>(key: string, value: T): Promise<void> {
   }
 
   try {
-    const store = getStore({ name: STORE_NAME, consistency: "strong" });
+    const store = getBlobStore();
     await store.setJSON(key, value);
   } catch {
     await writeLocal(key, value);

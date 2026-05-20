@@ -1,0 +1,175 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+---
+
+<PageLayout
+  title="Owner"
+  description="Private moderation dashboard — not linked from the public site."
+>
+  <Container>
+    <h1 class="font-semibold text-black dark:text-white mb-2">Owner moderation</h1>
+    <p class="text-sm opacity-75 mb-4 max-w-prose">
+      Use the same value as <code class="opacity-90">?owner=…</code> in your browser
+      (Bearer token for this page only — it stays in <code>sessionStorage</code> until you
+      close the tab). Bookmark
+      <code class="opacity-90">/owner-dashboard</code> — it is not in the header nav.
+    </p>
+
+    <div class="space-y-3 max-w-md">
+      <label class="block text-sm font-medium text-black dark:text-white" for="owner-secret">
+        Owner secret
+      </label>
+      <input
+        id="owner-secret"
+        type="password"
+        autocomplete="off"
+        class="w-full px-3 py-2 rounded-lg border border-black/15 dark:border-white/20 bg-transparent text-black dark:text-white"
+        placeholder="Paste secret once per tab"
+      />
+      <button
+        type="button"
+        id="owner-list-btn"
+        class="px-4 py-2 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 text-black dark:text-white text-sm"
+      >
+        List comments
+      </button>
+    </div>
+
+    <p id="owner-status" class="text-sm mt-4 opacity-75" role="status"></p>
+    <div id="owner-results" class="mt-8 space-y-8"></div>
+  </Container>
+</PageLayout>
+
+<script is:inline>
+  const API = "/.netlify/functions";
+
+  function getSecret() {
+    const input = document.getElementById("owner-secret");
+    const v = input && "value" in input ? String(input.value).trim() : "";
+    if (v) {
+      try {
+        sessionStorage.setItem("portfolio_owner_secret", v);
+      } catch (e) {
+        /* ignore */
+      }
+      return v;
+    }
+    try {
+      return sessionStorage.getItem("portfolio_owner_secret") || "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function setStatus(msg) {
+    const el = document.getElementById("owner-status");
+    if (el) el.textContent = msg || "";
+  }
+
+  function escapeHtml(t) {
+    const d = document.createElement("div");
+    d.textContent = t;
+    return d.innerHTML;
+  }
+
+  function attachDelete(btn, slug, id, li, secret) {
+    btn.addEventListener("click", async function () {
+      if (!confirm("Delete this comment?")) return;
+      setStatus("Deleting…");
+      try {
+        const dr = await fetch(
+          API + "/comments?slug=" + encodeURIComponent(slug) + "&id=" + encodeURIComponent(id),
+          {
+            method: "DELETE",
+            headers: { Authorization: "Bearer " + secret },
+          },
+        );
+        const dj = await dr.json().catch(function () {
+          return {};
+        });
+        if (!dr.ok) throw new Error(dj.error || dr.statusText);
+        li.remove();
+        setStatus("Deleted.");
+      } catch (err) {
+        setStatus(err.message || "Delete failed");
+      }
+    });
+  }
+
+  document.getElementById("owner-list-btn")?.addEventListener("click", async () => {
+    const secret = getSecret();
+    if (!secret) {
+      setStatus("Enter your owner secret first.");
+      return;
+    }
+    setStatus("Loading…");
+    const root = document.getElementById("owner-results");
+    if (root) root.innerHTML = "";
+    try {
+      const res = await fetch(API + "/admin-portfolio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + secret,
+        },
+        body: JSON.stringify({ action: "listComments" }),
+      });
+      const data = await res.json().catch(function () {
+        return {};
+      });
+      if (!res.ok) throw new Error(data.error || res.statusText);
+      const posts = data.posts || [];
+      if (!root) return;
+      if (posts.length === 0) {
+        root.innerHTML = "<p class=\"text-sm opacity-75\">No comments stored yet.</p>";
+        setStatus("Done.");
+        return;
+      }
+      posts.forEach(function (post) {
+        const block = document.createElement("section");
+        block.className = "space-y-2";
+        const h = document.createElement("h2");
+        h.className = "text-sm font-semibold text-black dark:text-white";
+        h.textContent = post.slug;
+        block.appendChild(h);
+        const ul = document.createElement("ul");
+        ul.className = "space-y-2 list-none p-0 m-0";
+        (post.comments || []).forEach(function (c) {
+          const li = document.createElement("li");
+          li.className =
+            "flex flex-wrap gap-2 items-start justify-between p-3 rounded-lg border border-black/10 dark:border-white/10 text-sm";
+          li.innerHTML =
+            "<div><div class=\"font-medium\">" +
+            escapeHtml(c.name) +
+            "</div><div class=\"opacity-75 text-xs mt-1\">" +
+            escapeHtml(c.id) +
+            "</div><p class=\"mt-2 whitespace-pre-wrap\">" +
+            escapeHtml(c.body) +
+            "</p></div>";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = "Delete";
+          btn.className =
+            "shrink-0 px-2 py-1 text-xs rounded border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5";
+          attachDelete(btn, post.slug, c.id, li, secret);
+          li.appendChild(btn);
+          ul.appendChild(li);
+        });
+        block.appendChild(ul);
+        root.appendChild(block);
+      });
+      setStatus("Loaded " + posts.length + " thread(s).");
+    } catch (err) {
+      setStatus(err.message || "Request failed");
+    }
+  });
+
+  try {
+    const saved = sessionStorage.getItem("portfolio_owner_secret");
+    const inp = document.getElementById("owner-secret");
+    if (saved && inp && "value" in inp) inp.value = saved;
+  } catch (e) {
+    /* ignore */
+  }
+</script>

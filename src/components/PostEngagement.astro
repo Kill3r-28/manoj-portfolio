@@ -151,6 +151,7 @@ const { postSlug } = Astro.props;
       try {
         const res = await fetch(
           `${apiBase()}/upvote?slug=${encodeURIComponent(postSlug)}&voterId=${encodeURIComponent(voterId)}`,
+          { credentials: "include" },
         );
         if (!res.ok) throw new Error("upvote fetch failed");
         const data = (await res.json()) as { count: number; voted: boolean };
@@ -175,6 +176,7 @@ const { postSlug } = Astro.props;
       try {
         const res = await fetch(
           `${apiBase()}/comments?slug=${encodeURIComponent(postSlug)}`,
+          { credentials: "include" },
         );
         if (!res.ok) throw new Error("comments fetch failed");
         const data = (await res.json()) as { comments: Comment[] };
@@ -225,6 +227,7 @@ const { postSlug } = Astro.props;
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ voterId }),
+          credentials: "include",
         });
         if (!res.ok) throw new Error("upvote failed");
         const data = (await res.json()) as { count: number; voted: boolean };
@@ -260,6 +263,7 @@ const { postSlug } = Astro.props;
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, body, website }),
+            credentials: "include",
           },
         );
         const data = (await res.json()) as { error?: string; comment?: Comment };

@@ -20,6 +20,8 @@ npm run dev
 | Projects | `src/content/projects/*/index.md` |
 | Essays (blog) | `src/content/blog/<slug>/index.md` — copy from `_template/`; see `src/content/blog/README.md` |
 | Blog upvotes & comments | Netlify Functions + Blobs (live on deploy; `npm run dev:netlify` locally) |
+| Owner / moderation | Set `PORTFOLIO_OWNER_SECRET` on Netlify. Visit any page with `?owner=YOUR_SECRET` once to set an HttpOnly cookie (skips visitor count). Moderation UI: `/owner-dashboard` (Bearer uses same secret; not linked in nav). |
+| Visitor count | Footer “Visitors (all time)” — stored in Blobs via `visitors` function. |
 | Photo | Replace `public/me.svg` or add `public/me.jpg` and update `index.astro` |
 | Resume | `public/resume.pdf` |
 | Site URL (sitemap) | `astro.config.mjs` → `site` after Netlify deploy |
@@ -50,6 +52,19 @@ flowchart LR
 3. **Site configuration → Build & deploy → Continuous deployment** — production branch **`main`**.
 4. (Optional) **Deploy contexts** → turn on **Deploy Previews** for pull requests.
 5. After first deploy, set `site` in `astro.config.mjs` to your `*.netlify.app` URL and push again.
+
+### Netlify environment (required for engagement + owner tools)
+
+In **Site configuration → Environment variables**, add:
+
+| Variable | Purpose |
+|----------|---------|
+| `PORTFOLIO_OWNER_SECRET` | Long random string. Same value as `?owner=…` in the URL, `Authorization: Bearer …` for `/owner-dashboard`, and cookie login via `/.netlify/functions/owner-login`. |
+| *(auto)* `NETLIFY_SITE_ID`, `NETLIFY_BLOBS_TOKEN` | Injected on deploy when **Netlify Blobs** is enabled for the site. |
+
+Enable **Blobs** for the project (Netlify UI: storage / Blobs — exact location varies by dashboard version). Without Blobs + tokens, functions fall back to read-only or empty storage and upvotes/comments can fail.
+
+Local testing: copy `.env.example` → `.env` and run `npm run dev:netlify` (set `USE_LOCAL_ENGAGEMENT=true` to use `.data/` files instead of Blobs).
 
 ### Day-to-day workflow
 

@@ -28,6 +28,26 @@ const { title, description, image = "/nano.png" } = Astro.props;
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <script is:inline>
   (function () {
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var o = q.get("owner");
+      if (!o) return;
+      var u = new URL(window.location.href);
+      u.searchParams.delete("owner");
+      var redirect = u.pathname + u.search + u.hash;
+      window.location.replace(
+        "/.netlify/functions/owner-login?owner=" +
+          encodeURIComponent(o) +
+          "&redirect=" +
+          encodeURIComponent(redirect),
+      );
+    } catch (e) {
+      /* ignore */
+    }
+  })();
+</script>
+<script is:inline>
+  (function () {
     const theme = localStorage.getItem("theme");
     let dark;
     if (theme === "light") dark = false;
