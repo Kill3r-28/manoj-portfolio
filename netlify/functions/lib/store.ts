@@ -36,7 +36,11 @@ async function readLocal<T>(key: string): Promise<T | null> {
 }
 
 async function writeLocal<T>(key: string, value: T): Promise<void> {
-  await writeFile(await localPath(key), JSON.stringify(value), "utf-8");
+  try {
+    await writeFile(await localPath(key), JSON.stringify(value), "utf-8");
+  } catch {
+    /* read-only FS on Lambda — fallback is dev-only, ignore */
+  }
 }
 
 function useLocalStore() {
@@ -51,7 +55,8 @@ export async function getJson<T>(key: string): Promise<T | null> {
   try {
     const store = getBlobStore();
     return await store.get(key, { type: "json" });
-  } catch {
+  } catch (err) {
+    console.error("[store] Blobs get failed", { key, err });
     return readLocal<T>(key);
   }
 }
@@ -65,7 +70,8 @@ export async function setJson<T>(key: string, value: T): Promise<void> {
   try {
     const store = getBlobStore();
     await store.setJSON(key, value);
-  } catch {
+  } catch (err) {
+    console.error("[store] Blobs set failed", { key, err });
     await writeLocal(key, value);
   }
 }

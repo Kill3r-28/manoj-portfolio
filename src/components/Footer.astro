@@ -19,7 +19,7 @@ const year = new Date().getFullYear();
           &copy; {year} {`|`} {SITE.NAME}
         </div>
         <p class="text-xs opacity-60 mt-1">
-          Visitors (all time):
+          Visitors:
           <strong data-visitor-count class="tabular-nums">—</strong>
         </p>
       </div>
@@ -103,6 +103,7 @@ const year = new Date().getFullYear();
   async function initVisitorCount() {
     const el = document.querySelector("[data-visitor-count]");
     if (!el) return;
+    let isOwner = false;
     try {
       const res = await fetch("/.netlify/functions/visitors", {
         credentials: "include",
@@ -110,8 +111,14 @@ const year = new Date().getFullYear();
       if (!res.ok) throw new Error("visitors get");
       const data = await res.json();
       el.textContent = String(data.count ?? 0);
-      if (data.isOwner) return;
-      if (sessionStorage.getItem("portfolio_visit_counted")) return;
+      isOwner = !!data.isOwner;
+    } catch {
+      el.textContent = "—";
+      return;
+    }
+    if (isOwner) return;
+    if (sessionStorage.getItem("portfolio_visit_counted")) return;
+    try {
       const post = await fetch("/.netlify/functions/visitors", {
         method: "POST",
         credentials: "include",
@@ -123,7 +130,7 @@ const year = new Date().getFullYear();
         el.textContent = String(data2.count);
       }
     } catch {
-      el.textContent = "—";
+      /* GET-displayed count stays as-is */
     }
   }
   initVisitorCount();
