@@ -4,6 +4,8 @@ role: "Systems Engineer"
 dateStart: "09/09/2018"
 dateEnd: "09/15/2020"
 ---
-Received training in Python, SQL, Java, and Spring Boot Microservices at the Mysore campus. Following this, got posted to Bhubaneswar location as part of a team working with Quadient Inspire for Aetna, a health insurance company in the US. I was involved in documenting templates used within the tool.
+Infosys was my first job out of college. I spent the early months at the Mysore campus in intensive training—Python, SQL, Java, and Spring Boot microservices.
 
-I later switched to another team, where I got to work on software development projects in Java. I was part of a Scrum team, joined in on sprint planning, and helped build a microservices project—all of which familiarized me with Agile, Sprint, Scrum methodologies.
+After that I moved to Bhubaneswar and joined a team working with Quadient Inspire for Aetna, a US health insurer. My work there was mostly about understanding how the templates fit together and documenting them.
+
+Later I switched teams and spent more time in straight-up software development in Java. I sat on a Scrum team, showed up for sprint planning like everyone else, and helped ship pieces of a microservices project.

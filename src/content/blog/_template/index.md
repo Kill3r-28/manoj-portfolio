@@ -4,11 +4,11 @@ description: "One-line summary for the blog list and SEO."
 date: "Jan 15 2024"
 draft: true
 category: writing
-# category: career   # use for PM / GenAI ops essays aimed at recruiters
+# category: career   # use for PM / GenAI ops posts aimed at recruiters
 # originalUrl: "https://your-old-site.com/post"  # optional — link to source
 ---
 
-Paste your essay body here. Use plain Markdown:
+Paste your post body here. Use plain Markdown:
 
 - Headings with `##`
 - **Bold** and *italic*

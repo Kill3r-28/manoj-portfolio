@@ -15,8 +15,9 @@ export const HOME: Metadata = {
 };
 
 export const BLOG: Metadata = {
-  TITLE: "Essays",
-  DESCRIPTION: "Notes on GenAI ops, team building, and product delivery.",
+  TITLE: "Blog",
+  DESCRIPTION:
+    "Posts on GenAI ops, team building, product delivery, and occasional longer-form writing.",
 };
 
 export const WORK: Metadata = {

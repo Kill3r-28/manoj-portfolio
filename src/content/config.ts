@@ -8,7 +8,7 @@ const blog = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     originalUrl: z.string().url().optional(),
-    /** career = PM / AI ops notes; writing = personal essays from older sites */
+    /** career = PM / AI ops notes; writing = personal posts / republished pieces */
     category: z.enum(["career", "writing"]).default("writing"),
   }),
 });

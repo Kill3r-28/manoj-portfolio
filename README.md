@@ -18,7 +18,7 @@ npm run dev
 | Homepage layout (sections) | `src/pages/index.astro` |
 | Work history | `src/content/work/*.md` |
 | Projects | `src/content/projects/*/index.md` |
-| Essays (blog) | `src/content/blog/<slug>/index.md` — copy from `_template/`; see `src/content/blog/README.md` |
+| Blog posts | `src/content/blog/<slug>/index.md` — copy from `_template/`; see `src/content/blog/_guides/HOW-TO-ADD-POSTS.md` |
 | Blog upvotes & comments | Netlify Functions + Blobs (live on deploy; `npm run dev:netlify` locally) |
 | Owner / moderation | Set `PORTFOLIO_OWNER_SECRET` on Netlify. Visit any page with `?owner=YOUR_SECRET` once to set an HttpOnly cookie (skips visitor count). Moderation UI: `/owner-dashboard` (Bearer uses same secret; not linked in nav). |
 | Visitor count | Footer “Visitors (all time)” — stored in Blobs via `visitors` function. |
