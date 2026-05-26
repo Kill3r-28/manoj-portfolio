@@ -23,5 +23,53 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <script>
+      import { navigate } from "astro:transitions/client";
+
+      function normalizedPath() {
+        const p = window.location.pathname.replace(/\/$/, "");
+        return p === "" ? "/" : p;
+      }
+
+      function isClickHomeScope() {
+        const p = normalizedPath();
+        return (
+          p === "/blog" ||
+          p.startsWith("/blog/") ||
+          p === "/work" ||
+          p.startsWith("/work/") ||
+          p === "/projects" ||
+          p.startsWith("/projects/")
+        );
+      }
+
+      function isInteractiveClickTarget(el: Element | null) {
+        if (!el) return false;
+        if (el.closest("a[href]")) return true;
+        if (el.closest("button")) return true;
+        if (el.closest("input, textarea, select")) return true;
+        if (el.closest("label")) return true;
+        if (el.closest('[role="button"]')) return true;
+        return false;
+      }
+
+      function onDocumentClick(e: MouseEvent) {
+        if (!isClickHomeScope()) return;
+        if (e.defaultPrevented) return;
+        if (e.button !== 0) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        if (isInteractiveClickTarget(t)) return;
+        e.preventDefault();
+        void navigate("/");
+      }
+
+      const w = window as Window & { __portfolioClickEmptyToHome?: boolean };
+      if (!w.__portfolioClickEmptyToHome) {
+        w.__portfolioClickEmptyToHome = true;
+        document.addEventListener("click", onDocumentClick);
+      }
+    </script>
   </body>
 </html>

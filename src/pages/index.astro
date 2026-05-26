@@ -79,6 +79,26 @@ const blog = (await getCollection("blog"))
         </article>
       </section>
 
+      {
+        blog.length > 0 && (
+          <section class="animate space-y-6">
+            <div class="flex flex-wrap gap-y-2 items-center justify-between">
+              <h5 class="font-semibold text-black dark:text-white">{BLOG.TITLE}</h5>
+              <Link href="/blog">See all posts</Link>
+            </div>
+            <ul class="flex flex-col gap-0">
+              {
+                blog.map((post) => (
+                  <li>
+                    <ArrowCard entry={post} />
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
+        )
+      }
+
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">
@@ -123,26 +143,6 @@ const blog = (await getCollection("blog"))
           }
         </ul>
       </section>
-
-      {
-        blog.length > 0 && (
-          <section class="animate space-y-6">
-            <div class="flex flex-wrap gap-y-2 items-center justify-between">
-              <h5 class="font-semibold text-black dark:text-white">{BLOG.TITLE}</h5>
-              <Link href="/blog">See all posts</Link>
-            </div>
-            <ul class="flex flex-col gap-0">
-              {
-                blog.map((post) => (
-                  <li>
-                    <ArrowCard entry={post} />
-                  </li>
-                ))
-              }
-            </ul>
-          </section>
-        )
-      }
 
       <section class="animate space-y-4">
         <h5 class="font-semibold text-black dark:text-white">Connect</h5>
