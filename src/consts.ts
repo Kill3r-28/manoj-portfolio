@@ -4,7 +4,7 @@ export const SITE: Site = {
   NAME: "Manoj Kumar",
   EMAIL: "", // optional: add when you want mailto on homepage
   NUM_POSTS_ON_HOMEPAGE: 2,
-  NUM_WORKS_ON_HOMEPAGE: 2,
+  NUM_WORKS_ON_HOMEPAGE: 5,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
 };
 
@@ -22,7 +22,7 @@ export const BLOG: Metadata = {
 
 export const WORK: Metadata = {
   TITLE: "Work",
-  DESCRIPTION: "Where I have worked and what I have done.",
+  DESCRIPTION: "Career notes, execution stories, and hands-on delivery posts.",
 };
 
 export const PROJECTS: Metadata = {

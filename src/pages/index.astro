@@ -4,7 +4,6 @@ import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
-import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS, BLOG } from "@consts";
 
 const intro = await getEntry("home", "intro");
@@ -13,12 +12,17 @@ if (!intro) {
 }
 const { Content: IntroContent } = await intro.render();
 
-const projects = (await getCollection("projects"))
-  .filter((project) => !project.data.draft)
+const blog = (await getCollection("blog"))
+  .filter((post) => !post.data.draft && post.data.category === "writing")
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
-const allwork = (await getCollection("work"))
+const workPosts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft && post.data.category === "career")
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+
+const experience = (await getCollection("work"))
   .sort(
     (a, b) =>
       new Date(b.data.dateStart).valueOf() -
@@ -26,17 +30,15 @@ const allwork = (await getCollection("work"))
   )
   .slice(0, SITE.NUM_WORKS_ON_HOMEPAGE);
 
-const work = await Promise.all(
-  allwork.map(async (item) => {
-    const { Content } = await item.render();
-    return { ...item, Content };
-  }),
-);
+const monthYear = (date: Date) =>
+  date.toLocaleString("en-US", { month: "long", year: "numeric" });
 
-const blog = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+const experienceDateRange = (startDate: Date, endDate?: Date | string) => {
+  const start = monthYear(startDate);
+  if (!endDate) return start;
+  if (typeof endDate === "string") return `${start} - ${endDate.toLowerCase()}`;
+  return `${start} - ${monthYear(endDate)}`;
+};
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -99,50 +101,55 @@ const blog = (await getCollection("blog"))
         )
       }
 
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Portfolio projects
-          </h5>
-          <Link href="/projects">See all projects</Link>
-        </div>
-        <ul class="flex flex-col gap-0">
-          {
-            projects.map((project) => (
-              <li>
-                <ArrowCard entry={project} />
-              </li>
-            ))
-          }
-        </ul>
-      </section>
+      {
+        workPosts.length > 0 && (
+          <section class="animate space-y-6">
+            <div class="flex flex-wrap gap-y-2 items-center justify-between">
+              <h5 class="font-semibold text-black dark:text-white">Work</h5>
+              <Link href="/work">See all work</Link>
+            </div>
+            <ul class="flex flex-col gap-0">
+              {
+                workPosts.map((post) => (
+                  <li>
+                    <ArrowCard entry={post} />
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
+        )
+      }
 
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Work experience
-          </h5>
-          <Link href="/work">See all work</Link>
-        </div>
-        <ul class="flex flex-col space-y-4">
-          {
-            work.map((entry) => (
-              <li>
-                <div class="text-sm opacity-75">
-                  {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-                </div>
-                <div class="font-semibold text-black dark:text-white">
-                  {entry.data.company}
-                </div>
-                <div class="text-sm opacity-75">{entry.data.role}</div>
-                <article>
-                  <entry.Content />
-                </article>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
+      {
+        experience.length > 0 && (
+          <section id="experience" class="animate space-y-6">
+            <div class="flex flex-wrap gap-y-2 items-center justify-between">
+              <h5 class="font-semibold text-black dark:text-white">Experience</h5>
+              <Link href="/resume.pdf">View resume</Link>
+            </div>
+            <ul class="flex flex-col gap-0">
+              {
+                experience.map((entry) => (
+                  <li class="py-3 sm:py-3.5 -mx-1 px-1">
+                    <div class="min-w-0 flex-1 space-y-1">
+                      <div class="font-semibold text-black dark:text-white">
+                        {entry.data.role}
+                      </div>
+                      <p class="text-sm text-black/65 dark:text-white/65 leading-snug">
+                        {entry.data.company}
+                      </p>
+                      <p class="text-sm text-black/55 dark:text-white/55 leading-snug">
+                        {experienceDateRange(entry.data.dateStart, entry.data.dateEnd)}
+                      </p>
+                    </div>
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
+        )
+      }
 
       <section class="animate space-y-4">
         <h5 class="font-semibold text-black dark:text-white">Connect</h5>

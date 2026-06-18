@@ -53,6 +53,18 @@ article {
     @apply text-black dark:text-white;
     @apply decoration-black/25 dark:decoration-white/50;
   }
+
+  article .linkedin-embed {
+    @apply my-8 flex justify-center;
+  }
+
+  article .linkedin-embed iframe {
+    width: 100%;
+    max-width: 504px;
+    aspect-ratio: 504 / 876;
+    height: auto;
+    border: 0;
+  }
 }
 
 .animate {
